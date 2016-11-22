@@ -1,0 +1,46 @@
+[05-Jan-2016 09:52:16 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home/carlo825/public_html/calculator/index.php on line 136
+[05-Jan-2016 09:52:18 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home/carlo825/public_html/calculator/index.php on line 136
+[05-Jan-2016 09:52:19 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home/carlo825/public_html/calculator/index.php on line 136
+[05-Jan-2016 09:54:07 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home/carlo825/public_html/calculator/index.php on line 136
+[05-Jan-2016 09:54:31 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home/carlo825/public_html/calculator/index.php on line 136
+[05-Jan-2016 09:55:20 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home/carlo825/public_html/calculator/index.php on line 136
+[05-Jan-2016 09:55:29 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home/carlo825/public_html/calculator/index.php on line 136
+[05-Jan-2016 09:55:54 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home/carlo825/public_html/calculator/index.php on line 136
+[05-Jan-2016 09:55:55 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home/carlo825/public_html/calculator/index.php on line 136
+[05-Jan-2016 09:55:56 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home/carlo825/public_html/calculator/index.php on line 136
+[05-Jan-2016 09:56:06 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home/carlo825/public_html/calculator/index.php on line 136
+[05-Jan-2016 09:56:54 America/Chicago] PHP Fatal error:  Can't use method return value in write context in /home/carlo825/public_html/calculator/index.php on line 154
+[05-Jan-2016 09:57:11 America/Chicago] PHP Fatal error:  Uncaught exception 'InvalidArgumentException' with message 'Route callable must be callable' in /home/carlo825/public_html/calculator/Slim/Route.php:178
+Stack trace:
+#0 /home/carlo825/public_html/calculator/Slim/Route.php(107): Slim\Route->setCallable('add')
+#1 /home/carlo825/public_html/calculator/Slim/Slim.php(443): Slim\Route->__construct('/add', 'add', true)
+#2 /home/carlo825/public_html/calculator/Slim/Slim.php(485): Slim\Slim->mapRoute(Array)
+#3 /home/carlo825/public_html/calculator/index.php(77): Slim\Slim->post('/add', 'add')
+#4 {main}
+  thrown in /home/carlo825/public_html/calculator/Slim/Route.php on line 178
+[05-Jan-2016 09:59:02 America/Chicago] PHP Fatal error:  Uncaught exception 'InvalidArgumentException' with message 'Route callable must be callable' in /home/carlo825/public_html/calculator/Slim/Route.php:178
+Stack trace:
+#0 /home/carlo825/public_html/calculator/Slim/Route.php(107): Slim\Route->setCallable('add')
+#1 /home/carlo825/public_html/calculator/Slim/Slim.php(443): Slim\Route->__construct('/add', 'add', true)
+#2 /home/carlo825/public_html/calculator/Slim/Slim.php(485): Slim\Slim->mapRoute(Array)
+#3 /home/carlo825/public_html/calculator/index.php(77): Slim\Slim->post('/add', 'add')
+#4 {main}
+  thrown in /home/carlo825/public_html/calculator/Slim/Route.php on line 178
+[05-Jan-2016 09:59:19 America/Chicago] PHP Fatal error:  Uncaught exception 'InvalidArgumentException' with message 'Route callable must be callable' in /home/carlo825/public_html/calculator/Slim/Route.php:178
+Stack trace:
+#0 /home/carlo825/public_html/calculator/Slim/Route.php(107): Slim\Route->setCallable('add')
+#1 /home/carlo825/public_html/calculator/Slim/Slim.php(443): Slim\Route->__construct('/add', 'add', true)
+#2 /home/carlo825/public_html/calculator/Slim/Slim.php(485): Slim\Slim->mapRoute(Array)
+#3 /home/carlo825/public_html/calculator/index.php(77): Slim\Slim->post('/add', 'add')
+#4 {main}
+  thrown in /home/carlo825/public_html/calculator/Slim/Route.php on line 178
+[05-Jan-2016 09:59:52 America/Chicago] PHP Fatal error:  Uncaught exception 'InvalidArgumentException' with message 'Route callable must be callable' in /home/carlo825/public_html/calculator/Slim/Route.php:178
+Stack trace:
+#0 /home/carlo825/public_html/calculator/Slim/Route.php(107): Slim\Route->setCallable('add')
+#1 /home/carlo825/public_html/calculator/Slim/Slim.php(443): Slim\Route->__construct('/add', 'add', true)
+#2 /home/carlo825/public_html/calculator/Slim/Slim.php(485): Slim\Slim->mapRoute(Array)
+#3 /home/carlo825/public_html/calculator/index.php(77): Slim\Slim->post('/add', 'add')
+#4 {main}
+  thrown in /home/carlo825/public_html/calculator/Slim/Route.php on line 178
+[05-Jan-2016 10:32:24 America/Chicago] PHP Fatal error:  Call to undefined function setParameter() in /home/carlo825/public_html/calculator/index.php on line 142
+[05-Jan-2016 10:34:20 America/Chicago] PHP Fatal error:  Call to protected method Calculator::setParameter() from context '' in /home/carlo825/public_html/calculator/index.php on line 143

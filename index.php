@@ -1,5 +1,9 @@
 <?php
 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
+
 /**
  * Step 1: Require the Slim Framework
  *
@@ -9,6 +13,9 @@
  * If you are using Composer, you can skip this step.
  */
 require 'Slim/Slim.php';
+require 'discount.php';
+require 'customer.php';
+require 'product.php';
 
 \Slim\Slim::registerAutoloader();
 
@@ -70,21 +77,7 @@ $app->delete(
 /**
  * Step 4: Configuring the routes
  */
-$app->get('/posts', 'getPosts');
-$app->get('/tags', 'getTags');
-
-$app->post('/addPost', 'addPost');
-$app->post('/addTag', 'addTag');
-
-$app->get('/post/:id', 'getPostById');
-$app->get('/tag/:id', 'getTagById');
-$app->get('/tagByPost/:id', 'getTagByIdPost');
-
-$app->post('/updatePost/:id', 'updatePost');
-$app->post('/updateTag/:id', 'updateTag');
-
-$app->delete('/deletePost/:id', 'deletePost');
-$app->delete('/deleteTag/:id', 'deleteTag');
+$app->post('/discounts', 'discountByIdOrder');
 
 /**
  * Step 5: Run the Slim application
@@ -94,196 +87,77 @@ $app->delete('/deleteTag/:id', 'deleteTag');
  */
 $app->run();
 
-function getConn() {
-    try {
-        return new PDO('mysql:host=localhost;dbname=crud_carlos', 'root', '', array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
-        );
-    } catch (Exception $exc) {
-        echo json_encode(array($exc->getTraceAsString()));
+function logMsg($msg, $level = 'info') {
+
+    $levelStr = '';
+    switch ($level) {
+        case 'info':
+            $levelStr = 'INFO';
+            break;
+
+        case 'warning':
+            $levelStr = 'WARNING';
+            break;
+
+        case 'error':
+            $levelStr = 'ERROR';
+            break;
     }
+
+    $date = date('Y-m-d H:i:s');
+
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    // formate the message
+    // 1o: actutal date
+    // 2o: mensagem level (INFO, WARNING ou ERROR)
+    // 3o: user IP
+    // 4o: the message
+    // 5o: /n
+    $logMessage = sprintf("[%s] [%s] [%s]: %s%s", $date, $levelStr, $ip, $msg, PHP_EOL);
+
+    $file = 'log/ApiLog_' . date('d_m_Y') . '.log';
+
+    file_put_contents($file, $logMessage, FILE_APPEND);
 }
 
-function getPosts() {
-    try {
-        $stmt = getConn()->query("SELECT * FROM posts s");
-        $categorias = $stmt->fetchAll(PDO::FETCH_OBJ);
-        echo "{posts:" . json_encode($categorias) . "}";
-    } catch (Exception $exc) {
-        echo json_encode(array($exc->getTraceAsString()));
-    }
-}
+function discountByIdOrder() {
+    logMsg("#####################################################");
+    logMsg("discountByIdOrder CALLED");
 
-function getTags() {
-    try {
-        $stmt = getConn()->query("SELECT * FROM tags WHERE status = 1");
-        $categorias = $stmt->fetchAll(PDO::FETCH_OBJ);
-        echo "{tags:" . json_encode($categorias) . "}";
-    } catch (Exception $exc) {
-        echo json_encode(array($exc->getTraceAsString()));
-    }
-}
-
-function addPost() {
-    try {
-        $request = \Slim\Slim::getInstance()->request();
-
-        $sql = "INSERT INTO posts (title,body) values (:title,:body) ";
-        $conn = getConn();
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam("title", $request->post('title'));
-        $stmt->bindParam("body", $request->post('body'));
-        $stmt->execute();
-        echo json_encode(array('id_inserted' => $conn->lastInsertId()));
-    } catch (Exception $exc) {
-        echo json_encode(array($exc->getTraceAsString()));
-    }
-}
-
-function addTag() {
-    try {
-        $request = \Slim\Slim::getInstance()->request();
-
-        $sql = "INSERT INTO tags (id_post,name) values (:id_post,:name) ";
-        $conn = getConn();
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam("id_post", $request->post('id_post'));
-        $stmt->bindParam("name", $request->post('name'));
-        $stmt->execute();
-        echo json_encode(array('id_inserted' => $conn->lastInsertId()));
-    } catch (Exception $exc) {
-        echo json_encode(array($exc->getTraceAsString()));
-    }
-}
-
-function getPostById($id) {
-    if (!isset($id)) {
-        echo "{'message':'missing id'}";
-    }
-    try {
-        $conn = getConn();
-        $sql = "SELECT * FROM posts WHERE id=:id and status = 1";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam("id", $id);
-        $stmt->execute();
-        $produto = $stmt->fetchObject();
-
-        echo json_encode($produto);
-    } catch (Exception $exc) {
-        echo json_encode(array($exc->getTraceAsString()));
-    }
-}
-
-function getTagById($id) {
-    if (!isset($id)) {
-        echo "{'message':'missing id'}";
-    }
-    try {
-        $conn = getConn();
-        $sql = "SELECT * FROM tags WHERE id=:id and status = 1";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam("id", $id);
-        $stmt->execute();
-        $produto = $stmt->fetchObject();
-
-        echo json_encode($produto);
-    } catch (Exception $exc) {
-        echo json_encode(array($exc->getTraceAsString()));
-    }
-}
-
-
-function getTagByIdPost($id) {
-    if (!isset($id)) {
-        echo "{'message':'missing id'}";
-    }
-    try {
-        $conn = getConn();
-        $sql = "SELECT * FROM tags WHERE id_post=:id and status = 1";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam("id", $id);
-        $stmt->execute();
-        $produto = $stmt->fetchObject();
-
-        echo json_encode($produto);
-    } catch (Exception $exc) {
-        echo json_encode(array($exc->getTraceAsString()));
-    }
-}
-
-function updatePost($id) {
-    if (!isset($id)) {
-        return "{'message':'missing id'}";
+    $app = new \Slim\Slim();
+    $discount = new Discount();
+    
+    if (is_numeric($app->request->params('id'))) {     
+        $id = $app->request->params('id');
+    }else{
+        echo json_encode(array('result' => 'Order not exist'));
+        logMsg("RESULT RETURNED: Order not exist");
         exit;
     }
 
-    try {
-        $request = \Slim\Slim::getInstance()->request();
+            
+    $order = json_decode(@file_get_contents('https://raw.githubusercontent.com/teamleadercrm/coding-test/master/example-orders/order'.$id.'.json'));
 
-        $sql = "UPDATE posts SET title=:title,body=:body WHERE   id=:id";
-        $conn = getConn();
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam("title", $request->post('title'));
-        $stmt->bindParam("body", $request->post('body'));
-        $stmt->bindParam("id", $id);
-        $stmt->execute();
-
-        echo json_encode(array('Updated'));
-    } catch (Exception $exc) {
-        echo json_encode(array($exc->getTraceAsString()));
-    }
-}
-
-function updateTag($id) {
-    if (!isset($id)) {
-        return "{'message':'missing id'}";
+  
+    if(is_null($order)) {
+        
+        echo json_encode(array('result' => 'Order not exist'));
+        logMsg("RESULT RETURNED: Order not exist");
         exit;
+        
+    }else{
+        $discount->setOrder($order);
+        echo json_encode($discount->getFinalDiscount($order));
     }
 
-    try {
-        $request = \Slim\Slim::getInstance()->request();
 
-        $sql = "UPDATE tags SET id_post=:id_post,name=:name WHERE   id=:id";
-        $conn = getConn();
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam("id_post", $request->post('id_post'));
-        $stmt->bindParam("name", $request->post('name'));
-        $stmt->bindParam("id", $id);
-        $stmt->execute();
-
-        echo json_encode(array('Updated'));
-    } catch (Exception $exc) {
-        echo json_encode(array($exc->getTraceAsString()));
-    }
+    logMsg("#####################################################");
 }
 
-function deletePost($id) {
-    if (!isset($id)) {
-        echo "{'message':'missing id'}";
-    }
-    try {
-        $sql = "UPDATE posts SET status = 0 WHERE id=:id";
-        $conn = getConn();
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam("id", $id);
-        $stmt->execute();
-        echo "{'message':'Post deleted'}";
-    } catch (Exception $exc) {
-        echo json_encode(array($exc->getTraceAsString()));
-    }
-}
 
-function deleteTag($id) {
-    if (!isset($id)) {
-        echo "{'message':'missing id'}";
-    }
-    try {
-        $sql = "UPDATE tags SET status = 0 WHERE id=:id";
-        $conn = getConn();
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam("id", $id);
-        $stmt->execute();
-        echo "{'message':'Post deleted'}";
-    } catch (Exception $exc) {
-        echo json_encode(array($exc->getTraceAsString()));
-    }
-}
