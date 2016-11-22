@@ -11,11 +11,23 @@ https://github.com/teamleadercrm/coding-test/blob/master/1-discounts.md
 ## Questions Collection [/discounts]
 
 ### POST Discounts [POST]
-
++ Parameters
+    + id (number) - Order Id
 + Response 200 (application/json)
+
 
         [
             {
                 "id": "Order Id"
             }
         ]
+        
+        + Response 200 (application/json)
+
+    + Headers
+
+            Location: /questions/1
+
+    + Body
+
+{"discount":0,"discountType":"","itemFree":"B102","quantityItemFree":2,"newValue":39.92}
